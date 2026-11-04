@@ -216,16 +216,28 @@ scaling in the **positive** direction has no effect on EMT; scaling in
 the **negative** direction raises EMT to **1.0**.
 
 The paper reads this as "IF-Guide learns a direction that suppresses
-toxicity." An equally consistent read: **IF-Guide moved the operating
-point of the toxicity circuit to its lower saturation boundary.**
-Positive scaling can't push EMT further down because it's already at
-floor. Negative scaling reactivates the underlying toxic circuit, which
-was never deleted. The circuit is present, measurable, and reachable
-from activation-space intervention.
+toxicity." The stronger reading the same measurements support: **IF-Guide
+moved the operating point of the toxicity circuit to its lower saturation
+boundary; it did not delete it.** Positive scaling can't push EMT further
+down because it's already at floor. Negative scaling reactivates the
+underlying toxic circuit to EMT = 1.0.
 
-That's a published-paper-level finding about adversarial robustness, and
-the paper treats it as evidence of successful suppression without noticing
-that it is also evidence of durable retention.
+Calling this result "deletion" requires calling a floor-at-zero response
+"deleted," *and* explaining why a coherent toxicity direction can still
+be computed from the IF-Guide model's own activations at all. The
+direction in §6.2 is constructed via difference-in-means on 5k toxic and
+5k non-toxic prompts *run through the IF-Guide model*. If the
+toxicity-generating circuit were actually deleted from that model, you
+should not get a stable direction whose negation reconstitutes maximal
+toxicity on held-out prompts. You do. The circuit is present, measurable,
+identifiable in activation space, and reachable from inference-time
+intervention.
+
+The paper treats this as evidence of successful suppression. On the same
+measurements, it is evidence of durable retention — and the two readings
+are not equally weighted. The retention reading fits every row of the
+data; the deletion reading requires reinterpreting the direction's
+continued existence away.
 
 ### D. The 4,648-record query/test contamination
 
