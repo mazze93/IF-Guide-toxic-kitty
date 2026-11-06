@@ -1,0 +1,8 @@
+# Probe outputs are ephemeral; keep the directory, not its contents.
+results/*
+!results/.gitkeep
+
+# Local venv
+.venv/
+__pycache__/
+*.pyc
