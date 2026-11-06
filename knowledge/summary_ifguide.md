@@ -309,6 +309,63 @@ transfer across corpora / tokenizers / fine-tuning regimes is not
 tested, and the method's reported effects are *point estimates* at a
 single tuned configuration.
 
+### H. The lacuna — training builds a procedural substrate, not ephemeral state
+
+The sub-assumptions in §5.A–G are not independent findings. They are
+evidence for a single claim large enough that most of the field treats
+it as settled background: **the model is not purely ephemeral.**
+
+The working heuristic — that a trained LLM carries its training as
+retrievable state which post-hoc alignment can suppress, redirect, or
+remove — treats training as the installation of a working memory the
+inference path reads from. On that view, "IF-Guide detoxifies the model"
+should mean "the toxic content was taken out and is gone." The paper's
+own measurements rule this out. The circuit the method targets is still
+in the model after training: §5.C shows the steering direction is still
+constructible from the IF-Guide model's *own* activations via
+difference-in-means on 5k toxic / 5k non-toxic prompts, and the circuit
+reactivates to maximum toxicity under negative scaling. The method
+moves the operating point. It does not remove the capability.
+
+That finding is not bounded to IF-Guide. It is evidence that **training
+built a procedural substrate** — a shaping of how the model processes,
+reasons, and generates, not just a store of what it recalls — and that
+the substrate is longitudinal. Post-hoc methods act on the substrate's
+operating point; they do not act on the substrate. Which means: every
+safety story that implies "the model will not produce X because X was
+removed" is making a claim the retention data has already contradicted,
+one method at a time.
+
+Our advantage as third-party readers of this result is that we hold no
+stake in IF-Guide's reception. Not the authors defending a contribution;
+not a reviewer managing a career-adjacent relationship; not a lab that
+benefits from the method landing or not landing. The read in this
+document is therefore independent in a specific sense: it is accountable
+only to what the data shows and what the probes will show.
+
+**What this document does not have.** We have not run the probes. The
+retention argument is a reading of published measurements, strengthened
+by the mechanical observation that the toxicity direction is still
+computable from the detoxified model — but it is not a replication, not
+an extension experiment, not a demonstration. Whether the substrate
+persists across transfer corpora, across tokenizers, across LoRA
+re-toxification (Probe 2), across layer-differential activation addition
+(Probe 3), across classifier independence (Probe 1) — these are the
+things the probes in §7 are designed to test, and the outcomes are not
+known. Honest footer: this is a reading that earns its probes. It does
+not pre-empt them.
+
+**Half-life of the invariant.** Any invariant this document characterizes
+about a specific method has a decaying half-life. Papers follow papers;
+measurements change the field's response; the next version of IF-Guide
+(or its successor) may address the specific gated-not-deleted finding
+directly, at which point the lacuna moves to the next method and the next
+assumption. This isn't an argument against publishing the reading. It is
+an argument for publishing it fast enough that the probes can run before
+the target moves. Each probe in §7 names, in its lacuna-link note, what
+it would show *about the substrate claim itself*, not just about
+IF-Guide's specific numbers.
+
 ---
 
 ## 6. What's Suspicious in the Code (minor, but worth knowing)
@@ -382,6 +439,14 @@ are available.
 **Why this one first.** It is the probe that costs the least and
 collapses the most of the paper's claims if it fails.
 
+**Lacuna link.** If the effect is classifier-dependent, the measured
+"toxicity reduction" is really "toxicity-as-defined-by-Detoxify
+reduction." The underlying generation capability is not what shifts;
+the agreement with a specific instrument shifts. That's consistent
+with the substrate-intact / operating-point-moved reading of §5.H —
+the circuit isn't being removed, the method is tuning the operating
+point of a single Detoxify-defined axis.
+
 ### Probe 2 · LoRA re-toxification (1-2 days)
 
 **Hypothesis.** IF-Guide's suppression is reversible by a small
@@ -402,6 +467,15 @@ is more durable than typical post-hoc alignment. If it rises above
 pre-training baseline within 100 steps, the suppression is skin-deep.
 
 **Compute.** LoRA on Pythia-1B is MPS-friendly. Hours. Datasets are ~1MB.
+
+**Lacuna link.** This is the most direct test of §5.H. If <1k LoRA
+steps on <1k examples restore pre-suppression toxicity, the circuit
+was not removed — the suppression was a thin layer over an intact
+procedural substrate, exactly the structure the retention argument
+claims. If re-toxification requires substantially more compute or
+data than Qi et al. 2024 reports for comparable post-hoc alignment
+methods, the substrate reading is weakened and the training objective
+materially reshaped the generation path.
 
 ### Probe 3 · Reactivation via activation addition (1 day)
 
@@ -426,6 +500,13 @@ effect on IF-Guide, the method really did delete the circuit.
 
 **Compute.** 200 prompts × 40 scaling values × 3 hook points × 2 models.
 ~24k generations. Hours. No training.
+
+**Lacuna link.** The §5.H substrate claim at the mechanism level.
+Reactivation from a transplanted base-model toxicity direction, or
+from multiple hook points, shows the circuit is still addressable
+from activation space — the substrate persists and is reachable from
+inference-time intervention alone, no weight updates required. The
+operating point can be moved back cheaply.
 
 ### Probe 4 · LDNOOBW-sanitization with the IF-Guide suppression loss (fair baseline) (~2 days)
 
@@ -456,6 +537,14 @@ their training setup fits in ~1 day on 8×A40. On M5 Pro: 1-3 days wall
 clock, feasible but not trivial. Alternative: fine-tune only (start from
 Pythia-160M pretrained), which collapses to Probe 2's budget.
 
+**Lacuna link.** Indirect. If a keyword-plus-suppression-loss matches
+IF-Guide's effect, the attribution machinery isn't what carries the
+substrate claim — the substrate moves the same way under any
+token-level penalty with sufficient coverage. That generalizes §5.H
+beyond influence-function methods: any training-time suppression of
+sufficiently-covering penalty mass over "toxic" tokens moves the
+operating point of the same substrate.
+
 ### Probe 5 · Capability regression on security-relevant tasks (~1 day)
 
 **Hypothesis.** The 10.8pp drop in toxicity recognition (§5.F) is the
@@ -480,6 +569,16 @@ capability regression that is independent of the direct toxicity-
 recognition artifact.
 
 **Compute.** Inference only. ~1 day wall clock.
+
+**Lacuna link.** The cost of operating-point suppression. If reasoning
+about norm-violating content degrades alongside reasoning about
+norm-conforming content, the substrate is tangled — training built a
+joint representation the method cannot cleanly disentangle. That's
+additional evidence that detoxification is operating-point suppression
+of a single substrate, not removal of a separable capability. It also
+names the downstream cost for a security engineer building on a
+detoxified model: the capability you lose is adjacent to the capability
+you kept.
 
 ### Probe 6 · Proxy-disagreement forensics (dependent on score artifacts)
 
@@ -517,6 +616,16 @@ analysis to a subset of the training data.
 **Compute (bounded version).** Restrict to Pythia-160M vs. Pythia-1B
 scores on a 100M-token sub-slice. ~3 days wall clock on M5 Pro for the
 score computation.
+
+**Lacuna link.** Characterizes what the substrate *is*. If
+small-model and large-model proxies find different subsets of tokens
+that produce similar downstream effects, the substrate is partially
+redundant — many token-sets suffice to constrain the same downstream
+property. The substrate is less a set of locations and more a
+geometric constraint the method can enforce via any sufficiently-
+covering penalty mass. That's a shape claim, not a location claim,
+and it maps onto "procedural substrate" from §5.H better than the
+"specific toxic circuit" language the paper uses.
 
 ---
 
@@ -593,10 +702,21 @@ here are the ones that test the harness itself.
   checkpoints and running inference-only probes.
 - **M5 Pro feasibility for probe 6**: not without substantial
   storage and compute compromises; propose the bounded version.
+- **Probe scaffolds.** The top three probes (classifier
+  triangulation, LoRA re-toxification, activation reactivation) are
+  scaffolded as standalone runnable scripts in
+  [`probes/`](../probes/). Each supports `--dry-run` to validate the
+  pipeline against synthetic data before committing compute. The
+  scripts are the test; the scripts' outputs are the evidence. Nothing
+  in this document upgrades from "argued" to "demonstrated" until one
+  of them has been run against the real checkpoints. See
+  `probes/README.md` for setup and exit-code semantics.
 
 ---
 
 **Session note.** Arxiv source in `~/.cache/knowledge/2506.01790/`.
-Repo fork at `/home/user/if-guide-toxic-kitty/`. This summary lives on
-branch `claude/inspiring-dijkstra-1d1th3` in the fork. Probe scripts
-to be added as a follow-up, separately scoped.
+Repo fork at `/home/user/if-guide-toxic-kitty/`. This summary and the
+probe scaffolds live on branch `claude/inspiring-dijkstra-1d1th3` in
+the fork. Probes 4-6 are described but not yet scaffolded; they need
+either full retraining or large score-matrix artifacts out of scope
+for a standalone-runnable directory.
