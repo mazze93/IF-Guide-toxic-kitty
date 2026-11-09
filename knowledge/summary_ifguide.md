@@ -1,10 +1,16 @@
 # IF-Guide: Influence Function-Guided Detoxification of LLMs
 
-**arXiv:** [2506.01790](https://arxiv.org/abs/2506.01790)
+**arXiv:** [2506.01790v3](https://arxiv.org/abs/2506.01790v3) (5 Dec 2025)
 **Authors:** Zachary Coalson (Oregon State), Juhan Bae (Toronto), Nicholas Carlini (Anthropic), Sanghyun Hong (Oregon State)
 **Venue:** NeurIPS 2025
 **Tag:** `ifguide`
-**Reviewed:** 2026-11-04 · adversarial read, walking backwards from claims to assumptions
+**Reviewed:** 2026-11-04 (initial read) · 2026-11-09 (citations repinned to v3 after reviewer catch) · adversarial read, walking backwards from claims to assumptions
+
+> **Version pin.** Every table and appendix reference below is keyed to
+> v3. Earlier drafts of this summary cited Appendix E/Table 10 for the
+> proxy overlap and Appendix F/Table 13 for the recognition result;
+> both were off (should be Appendix F/Table 9 and Appendix H/Table 11
+> respectively). A reviewer caught it; fixed in this revision.
 
 > **Note on reading register.** This summary is not a book report. It is an
 > adversarial read commissioned to find the parts of the method that are
@@ -166,7 +172,7 @@ The paper's "Implicit toxicity" section partially mitigates this by evaluating w
 
 ### B. Proxy-model "equivalence" is really proxy-model *substitutability*
 
-Appendix E, Table 10, Overlap Coefficient between proxies' selected toxic tokens:
+Appendix F, Table 9, Overlap Coefficient between proxies' selected toxic tokens:
 
 ```
                  Pythia-160M   Pythia-410M   Pythia-1B   Llama-3.2-1B
@@ -176,16 +182,27 @@ Pythia-1B                                     1.000       0.440
 Llama-3.2-1B                                              1.000
 ```
 
-Mean cross-proxy overlap: **44.6%**. Mean within-family: 47.2%.
-Mean cross-family: 42%.
+The paper's Appendix F text reports mean overall overlap 44.61%, mean
+within-Pythia 47.22%, mean cross-family 42%. Recomputing from the six
+off-diagonal values in Table 9 produces **44.95%** overall and
+**47.90%** within-Pythia; cross-family 42.00% reproduces cleanly. The
+within-family / cross-family story the paper tells is right in direction;
+the specific averages aren't the ones the table yields, so either the
+paper rounded differently or its averaging set differs from the six
+off-diagonals I see. Flagging because inheriting the paper's numbers
+unchecked is exactly what an adversarial read should catch.
 
-On a 20M-token budget, 44.6% overlap means each pair of proxies agrees
-on ~8.9M tokens and disagrees on ~11.1M each. The paper frames this as
-"44.6% is substantial relative to a 1B-token corpus." That's the wrong
-denominator. The right denominator is the *selected* set (20M), not the
-*source* set (1B). On the selected set, **the majority of each proxy's
-output disagrees with every other proxy's output**, and yet all of them
-produce similar downstream toxicity reductions.
+On a 20M-token budget, ~45% pairwise overlap means each *pair* of
+proxies agrees on ~9M tokens and disagrees on ~11M. The paper frames
+this as "44.61% is substantial relative to a 1B-token corpus." That's
+the wrong denominator. The right denominator is the *selected* set
+(20M), not the *source* set (1B). On the selected set, **the majority
+of each proxy's output disagrees with any given other proxy's output**,
+and yet all of them produce similar downstream toxicity reductions.
+(Pairwise Overlap Coefficient only supports the "any given other"
+claim. Whether a token is in the intersection across *all* four
+proxies is a different question — it's what Probe 6 measures, not
+what Table 9 shows.)
 
 Three compatible interpretations, each probative:
 
@@ -235,35 +252,69 @@ intervention.
 
 The paper treats this as evidence of successful suppression. On the same
 measurements, it is evidence of durable retention — and the two readings
-are not equally weighted. The retention reading fits every row of the
-data; the deletion reading requires reinterpreting the direction's
+are not equally weighted. The retention reading fits most of what's on
+the page; the deletion reading requires reinterpreting the direction's
 continued existence away.
+
+**One confound to call out before overclaiming the retention reading.**
+EMT = 1.0 under a large final-layer perturbation is also what you'd see
+if the output degenerates into text Detoxify scores as toxic — repetition,
+mode collapse into a slur loop, high-entropy garbage that trips the
+classifier — without any coherent toxic *circuit* being reconstituted.
+The positive-side floor argument holds either way. The negative-side
+reactivation argument requires excluding the degeneration case, which
+the paper's §6.2 does not do. That's exactly what Probe 3's protocol
+should (and now does, after revision) record: coherence metrics
+(perplexity under the unsteered model, repetition rate, sample
+outputs) alongside EMT, and the verdict requires both — reactivation
+to EMT ≥ 0.8 **with** retained coherence, not reactivation measured
+by EMT alone.
 
 ### D. The 4,648-record query/test contamination
 
-From the data files (verified in-code via `data/RTP/`):
+Reproducible from the shipped index files. One command:
+
+```bash
+cd /path/to/if-guide-toxic-kitty && python3 -c "
+import numpy as np
+qt = set(np.load('data/RTP/query_indices/toxic_indices.npy').tolist())
+qn = set(np.load('data/RTP/query_indices/nontoxic_indices.npy').tolist())
+tt = set(np.load('data/RTP/test_indices/toxic_indices.npy').tolist())
+tn = set(np.load('data/RTP/test_indices/nontoxic_indices.npy').tolist())
+print(f'|query toxic|     = {len(qt):>6}')
+print(f'|query non-toxic| = {len(qn):>6}')
+print(f'|test toxic|      = {len(tt):>6}')
+print(f'|test non-toxic|  = {len(tn):>6}')
+print(f'query ∩ test      = {len((qt|qn) & (tt|tn)):>6} records')
+print(f'(same-label joins): qt∩tt = {len(qt & tt)}, qn∩tn = {len(qn & tn)}')
+"
+```
+
+Output on the shipped `data/RTP/`:
 
 ```
 |query toxic|     = 19,785
 |query non-toxic| = 64,327
 |test toxic|      =  5,000
 |test non-toxic|  =  5,000
-query ∩ test      =  4,648 records (!)
+query ∩ test      =  4,648 records
+(same-label joins): qt∩tt = 0, qn∩tn = 0
 ```
 
 The paper says test examples are "distinct from those in the influence
-computation." They're distinct on label×record keys (a record used as
-"toxic query" never appears as "toxic test") but *not* on raw records:
-4,648 RTP records are reused across the split, with different Detoxify-
-determined labels because the thresholds differ (0.75 / 0.25 for queries
-vs. 0.5 for test).
+computation" (§4.2). They're distinct on label×record keys (a record
+used as "toxic query" never appears as "toxic test") but *not* on raw
+records: 4,648 RTP records (46.5% of the 10,000-prompt test set) are
+reused across the split, with different Detoxify-determined labels
+because the thresholds differ (0.75 / 0.25 for queries vs. 0.5 for
+test).
 
 This is not a classical train/test violation — the training data is
-OpenWebText, not RTP — but the **query signal that selected the training
-tokens** is drawn from a pool that has a 46% overlap with the evaluation
-prompt pool at the record level. The method is attributed with and
-evaluated against text that overlaps in surface content, mediated only
-by threshold placement.
+OpenWebText, not RTP — but the **query signal that selected the
+training tokens** is drawn from a pool that has a 46.5% overlap with
+the evaluation prompt pool at the record level. The method is
+attributed with and evaluated against text that overlaps in surface
+content, mediated only by threshold placement.
 
 ### E. The eval harness ignores embeddings and the LM head
 
@@ -276,25 +327,35 @@ embedding-close neighbours) is invisible to the attribution path. The
 method cannot identify "the model learned a toxic word embedding" as a
 cause. It can only identify learned-circuit changes in the body of the network.
 
-### F. Capability regression is understated
+### F. Toxicity recognition shift — label-bias, not a one-sided deficit
 
-Appendix F, Table 13:
-- Base Pythia-2.8B: 87.5% accuracy on toxic classification, 27% on non-toxic.
-- IF-Guide Pythia-2.8B: 76.7% accuracy on toxic, 34% on non-toxic.
+Appendix H, Table 11 (Pythia-2.8B, instruction-tuned on UltraChat,
+tested on 100 toxic + 100 non-toxic RTP examples):
 
-The paper's reading: "comparable performance." The arithmetic: **toxicity
-recognition drops 10.8 percentage points absolute (12% relative)**. The
-proposed explanation — "prompt template biases toward the toxic label" —
-doesn't explain why *IF-Guide* is worse at recognizing toxic content than
-the base, because the same template bias applies to both.
+|           | Toxic acc. | Non-toxic acc. | Balanced acc. |
+| --------- | ---------- | -------------- | ------------- |
+| Base      | 87.5%      | 27.0%          | ~57.3%        |
+| IF-Guide  | 76.7%      | 34.0%          | ~55.4%        |
+| **Δ**     | **−10.8pp**| **+7.0pp**     | **−1.9pp**    |
 
-A simpler explanation: the suppression objective unlearns patterns
-needed to both *produce* and *recognize* toxic content, because they
-share representations. If true, IF-Guide's safety story contains a
-capability tax that the paper is not characterizing. For a security
-engineer applying detoxified models to content moderation, threat
-analysis, or adversarial text understanding, this is the number that
-matters most.
+An earlier revision of this summary reported only the toxic-side drop
+and framed it as "12% relative capability regression." That framing
+was one-sided. With n=100 per class, each cell's 95% CI is roughly
+±8–9pp (binomial). The honest reading of Table 11 is a **label-bias
+shift of uncertain magnitude**: IF-Guide is less likely to label *any*
+sentence toxic (toxic-class accuracy down, non-toxic-class accuracy
+up), balanced accuracy barely moved, and the per-cell shifts are near
+the CI edge.
+
+Probe 5's hypothesis stands — there may be a measurable
+"alignment tax" on reasoning about norm-violating content — but
+Table 11 alone doesn't demonstrate it. What Table 11 shows is that
+IF-Guide's post-instruction-tune behaviour tilts the decision
+boundary toward "non-toxic" labels across the board. That's compatible
+with (a) a real recognition deficit, (b) a classifier-bias shift
+without capability loss, or (c) a prompt-template interaction the
+paper names in passing. Probe 5 is designed to tell these apart; this
+row is the motivation, not the proof.
 
 ### G. Narrow stability envelope
 
@@ -426,10 +487,24 @@ the pipeline.
   - Optional: a locally-trained ToxiGen-RoBERTa checkpoint
 - Compute EMT and TP under each classifier.
 
-**Falsification.** If IF-Guide's reduction stays within ±20% of the
-reported Detoxify effect across all four, the 10× claim is classifier-
-robust. If it drops more than 2× under non-Detoxify classifiers, the
-circularity is confirmed as load-bearing.
+**Falsification.** Rules chosen before the probe runs; synced with
+`probes/01_classifier_triangulation.py`'s `decide_verdict`:
+
+- **Baseline sanity.** If Detoxify's own reduction on the current
+  target < 2×, the probe cannot test classifier-dependence of an
+  effect that doesn't exist. Return INCONCLUSIVE.
+- **CONFIRMED** (hypothesis supported; effect is classifier-dependent):
+  alternatives' geometric mean reduction < 60% of Detoxify's reduction
+  AND no single alternative recovers more than 80% of Detoxify's.
+- **FALSIFIED** (hypothesis rejected; effect is classifier-robust):
+  at least 2 alternative classifiers within ±20% of Detoxify's
+  reduction.
+- **INCONCLUSIVE** otherwise.
+
+Thresholds are relative to Detoxify, not absolute, because Detoxify's
+measured reduction varies across targets (Pythia-1B vs. Llama-3.2-1B
+etc.) and an absolute "drops more than 2×" rule would fire differently
+depending on which target the probe is run against.
 
 **Compute.** Inference-only. On M5 Pro: generation takes a few hours;
 all classifier scoring is API-bound or small-model inference.
@@ -638,7 +713,7 @@ Fit-for-purpose assessment, honest.)
 The paper is a **Carlini-signature artifact**:
 
 - An empirical claim that looks like "we solved X."
-- Buried in the appendix, a measurement (Table 10, Appendix F) that
+- Buried in the appendix, a measurement (Table 9, Appendix F, and Table 11, Appendix H) that
   partially undermines the claim.
 - A method that is technically clean, computationally inventive (small
   proxy), and in a tight stability envelope.

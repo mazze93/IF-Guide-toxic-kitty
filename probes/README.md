@@ -1,23 +1,32 @@
-# Independent Probes for IF-Guide
+# Independent Probes for IF-Guide — Protocol Stubs + Verdict Harness
 
-Runnable scaffolds for the adversarial probes designed in
+Scaffolds for the adversarial probes designed in
 [`knowledge/summary_ifguide.md`](../knowledge/summary_ifguide.md) §7.
+These are **protocol stubs with verdict logic** — not runnable
+end-to-end implementations.
 
-These are **shareable templates**, not verified implementations. They
-load, parse arguments, follow the protocol from the summary, and emit
-structured JSON results. Where a step depends on an API key, a
-checkpoint path, or a benchmark that isn't bundled, the script says
-so and exits — no silent hardcoded path, no fake success. A `--dry-run`
-mode generates synthetic data and validates the plumbing without
-making real model calls, so you can verify the script works before
-spending compute.
+**What's actually here.** For each probe: argument parsing, dataclass
+schemas for results, falsification rules in `decide_verdict`, a
+`--dry-run` mode that exercises the verdict pipeline on synthetic
+data, and TODO comments documenting the exact transformers/peft/
+Detoxify/Kronfluence calls a real implementation would make.
 
-Neither of us has run these to completion against the real IF-Guide
-checkpoints as of the commit date. The point of this directory is
-**reproducibility independent of us**: anyone can clone this fork,
-install `requirements.txt`, point at HuggingFace checkpoints they
-pulled themselves, and get an answer. The scripts are the test; the
-scripts' outputs are the evidence.
+**What's NOT here.** Live paths — generation, Detoxify scoring,
+Perspective/LlamaGuard/OpenAI-moderation scoring, RTP loading, LoRA
+training, toxicity-direction computation, steered generation — all
+raise `NotImplementedError`. Anyone who wants to actually run a probe
+against the real IF-Guide checkpoints will need to implement those
+blocks. The scripts are the scaffolding for that work, not a
+substitute for it.
+
+**Honest footer.** The claims in `knowledge/summary_ifguide.md` are
+upgraded from "argued" to "demonstrated" only when a live
+implementation of one of these probes has been run end-to-end against
+the released checkpoints. As of this commit, that has not happened.
+The scripts' value right now is as a shareable, reviewable *protocol*,
+with the falsification criteria chosen in advance — so if someone else
+runs them, we can read their results against a specification we
+committed to before seeing them.
 
 ## The probes
 
@@ -82,5 +91,21 @@ in the summary is a reading of the paper's measurements, strengthened
 where the paper's own data supports it, and otherwise pending the
 probes here. Nothing in the summary becomes "shown" until one of these
 scripts has run end-to-end against the real checkpoints and the result
-has been reproduced independently. These scripts are the condition of
-the claims upgrading from "argued" to "demonstrated."
+has been reproduced independently. The scaffolds pin the protocol and
+the verdict thresholds in advance; the claims upgrade only when
+someone — us or a reviewer — fills in the live paths and runs them.
+
+## Known-open items the current scaffolds don't yet cover
+
+Called out by review on 2026-11-09:
+
+- Dry-runs exercise each verdict path but don't ship a
+  `--dry-run-scenario` flag covering CONFIRMED / FALSIFIED /
+  INCONCLUSIVE from a single invocation. Probes 1 and 3's current
+  dry-runs each hit one verdict; a proper plumbing test matrix is a
+  follow-up.
+- No `probes/lib/` yet. Generation and scoring will be duplicated
+  across probes once anyone actually implements them. Refactor to a
+  shared module after the first live implementation lands.
+- No unit tests on the `decide_verdict` functions, which are the only
+  real logic in these files. Highest-ROI next commit.
