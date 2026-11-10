@@ -6,3 +6,8 @@ results/*
 .venv/
 __pycache__/
 *.pyc
+
+# The repository's root .gitignore ignores every `lib/` (it is the stock
+# Python template, written for virtualenv layouts). Without this line the
+# probes' shared module would be left out of every commit.
+!lib/
