@@ -1,0 +1,7 @@
+id: check/probe-3-steering-with-coherence
+type: Check
+title: "Probe 3: negative steering with a coherence measure beside EMT"
+context_tags: [probe]
+body: >
+  Rule in probes/lib/verdicts.py (steering_reactivation). Not run; steering is
+  not implemented.

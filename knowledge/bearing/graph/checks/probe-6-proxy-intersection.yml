@@ -1,0 +1,6 @@
+id: check/probe-6-proxy-intersection
+type: Check
+title: "Probe 6: which tokens all proxies select, and whether those alone carry the effect"
+context_tags: [probe]
+body: >
+  Needs the score matrices from several proxies. Not run; no code.

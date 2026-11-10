@@ -1,0 +1,5 @@
+id: source/this-summary
+type: Source
+title: "This repository's summary"
+detail: "knowledge/summary_ifguide.md. The reviewer's own reasoning. Provenance only: it never counts toward a claim."
+verified: {date: "2026-11-10", via: "this repository, knowledge/summary_ifguide.md"}

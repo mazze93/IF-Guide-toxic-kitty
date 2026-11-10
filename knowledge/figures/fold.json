@@ -1,0 +1,35 @@
+{
+  "claim/headline-inflated-by-shared-classifier": {
+    "tier": "fragile",
+    "robustness": 1,
+    "frames": [
+      "paper-reported"
+    ]
+  },
+  "claim/proxies-select-mostly-different-tokens": {
+    "tier": "fragile",
+    "robustness": 1,
+    "frames": [
+      "paper-reported"
+    ]
+  },
+  "claim/query-and-test-share-records": {
+    "tier": "fragile",
+    "robustness": 1,
+    "frames": [
+      "repo-computed"
+    ]
+  },
+  "claim/suppression-is-gated-not-deleted": {
+    "tier": "gone",
+    "robustness": 0,
+    "frames": []
+  },
+  "claim/table-9-means-not-reproduced": {
+    "tier": "fragile",
+    "robustness": 1,
+    "frames": [
+      "paper-reported"
+    ]
+  }
+}

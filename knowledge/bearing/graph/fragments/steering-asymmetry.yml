@@ -1,0 +1,6 @@
+id: fragment/steering-asymmetry
+type: Fragment
+title: "Section 4.6: on the IF-Guide model positive steering does nothing; negative steering raises EMT and TP to 1.0"
+source: source/ifguide-paper-v3
+context_tags: [paper-text]
+note: EMT and TP only. No perplexity, repetition rate or sample text is reported.

@@ -1,0 +1,9 @@
+id: claim/suppression-is-gated-not-deleted
+type: Claim
+title: "IF-Guide suppresses toxic generation without removing the ability (the lacuna)"
+state: candidate
+confidence: inferred
+context_tags: [paper-text]
+summary_section: "5.C, 5.H"
+body: >
+  A thesis. The paper's steering result permits it and does not show it.

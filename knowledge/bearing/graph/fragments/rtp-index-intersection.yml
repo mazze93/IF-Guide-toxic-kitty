@@ -1,0 +1,6 @@
+id: fragment/rtp-index-intersection
+type: Fragment
+title: "Shipped RTP indices: 84,112 query records, 10,000 test records, 4,648 in both"
+source: source/ifguide-repo
+context_tags: [shipped-data]
+note: Set intersection of the four .npy index files. Same-label intersections are empty.

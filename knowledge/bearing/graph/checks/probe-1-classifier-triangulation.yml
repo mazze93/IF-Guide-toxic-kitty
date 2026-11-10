@@ -1,0 +1,7 @@
+id: check/probe-1-classifier-triangulation
+type: Check
+title: "Probe 1: re-score with classifiers that share Detoxify's construct but not its data"
+context_tags: [probe]
+body: >
+  probes/01_classifier_triangulation.py on a base and an IF-Guide model. Rule in
+  probes/lib/verdicts.py. Not run: no IF-Guide model is public.

@@ -1,0 +1,6 @@
+id: fragment/t1-t2-rad
+type: Fragment
+title: "Tables 1 and 2, Pythia-1B: RAD 0.162 under Detoxify (3.61x), 0.286 under ToxiGen (1.92x)"
+source: source/ifguide-paper-v3
+context_tags: [paper-table]
+note: RAD took no Detoxify labels from this pipeline and its reduction shrinks nearly as much. The shrink is not specific to IF-Guide.

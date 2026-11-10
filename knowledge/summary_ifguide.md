@@ -27,6 +27,34 @@
 
 ---
 
+## 0. How claims in this document are qualified
+
+![Figure 0. Five claims from this summary and the standing the bearing engine derived for each: four rest on one source and are marked fragile; the lacuna thesis has no counted source because both of its probes are unrun.](figures/fig-0-claim-standing.svg)
+
+Each claim is a node in a small graph under [`bearing/`](bearing/), and
+its standing is computed by the bearing engine
+([mazze93/intentional-fragility](https://github.com/mazze93/intentional-fragility),
+`engine/`), not chosen by me. The rules:
+
+- A **source** is one independent place evidence comes from: the paper's
+  own tables and text, numbers computed from the data shipped in this
+  repository, or a probe run. My own reasoning is recorded and never
+  counted.
+- **Robust** means two or more sources. **Fragile** means one.
+  **Gone** means none that count.
+- A check that has not been run counts for nothing. Four of the six
+  checks are unrun.
+- Evidence against a claim is shown beside it and never subtracted.
+- A withdrawn argument stays in the ledger with the reason.
+
+Fragile does not mean doubtful. That 4,648 records are shared is
+arithmetic anyone can rerun; it is fragile because only one source
+bears on it. It means: do not build on this alone.
+
+No claim here is robust. The lacuna thesis (§5.C, §5.H) stands at zero:
+the two arguments I gave for it are both withdrawn in the ledger, and
+its two probes are unrun.
+
 ## 1. What It Does
 
 IF-Guide turns influence functions into a *proactive* detoxification tool.
@@ -187,6 +215,8 @@ reduction against the undefended model:
 | Word Filtering | 1.28× | 1.22× | 0.95 |
 | DPO | 1.34× | 1.37× | 1.02 |
 
+![Figure 1. EMT reduction on Pythia-1B under Detoxify and under ToxiGen for five methods. IF-Guide keeps 45% of its Detoxify reduction under ToxiGen, RAD 53%, Toxicity Filtering 87%, Word Filtering 95%, DPO 102%.](figures/fig-1-reduction-by-classifier.svg)
+
 RAD never saw Detoxify labels from this pipeline, and its reduction
 shrinks almost as much as IF-Guide's. So the halving is not specific to
 IF-Guide. Two explanations remain and the paper's data does not
@@ -211,6 +241,8 @@ Pythia-410M                      1.000        0.517       0.401
 Pythia-1B                                     1.000       0.440
 Llama-3.2-1B                                              1.000
 ```
+
+![Figure 3. Overlap coefficient for each of the six proxy pairs, 0.401 to 0.517. Only one pair exceeds one half.](figures/fig-3-proxy-overlap.svg)
 
 The paper's Appendix F text reports mean overall overlap 44.61%, mean
 within-Pythia 47.22%, mean cross-family 42%. Recomputing from the six
@@ -279,6 +311,17 @@ suppresses toxicity. Two readings fit what is reported:
    toxic. EMT reaches 1.0 with no coherent toxic output and no circuit
    brought back.
 
+![Figure 4. The steering numbers the paper gives: base model 0.47 at scaling minus 5 and 0.69 at plus 5; IF-Guide model 1.0 under negative scaling and no effect under positive. No coherence measure is reported.](figures/fig-4-steering-reported.svg)
+
+**The claim, quantified.** What the paper gives is three numbers and one
+phrase: 0.47, 0.69, 1.0 and "no effect". What "gated" needs is a fourth
+number the paper does not give: how coherent the text is at the point
+EMT reaches 1.0. Until that exists the evidence for "gated" over
+"degenerate" is zero counted sources (Figure 0). Probe 3's rule sets the
+bar in advance: at least half the base-to-IF-Guide gap recovered, with
+perplexity under twice the unsteered baseline and under 30% repeated
+4-grams, at two hook points.
+
 The paper reports EMT and TP only. It gives no perplexity, no
 repetition rate and no sample of the steered text, so **the published
 numbers do not separate these two readings.** What would: the same
@@ -333,6 +376,8 @@ Output on the shipped `data/RTP/`:
 query ∩ test      =  4,648 records
 (same-label joins): qt∩tt = 0, qn∩tn = 0
 ```
+
+![Figure 2. Of the 10,000 test prompts, 4,648 (46.5%) also appear in the 84,112-record query pool; 5,352 do not.](figures/fig-2-query-test-overlap.svg)
 
 The paper says evaluation uses examples "distinct from those in the
 influence computation" (§3.1) and calls the query set "disjoint from
@@ -880,9 +925,6 @@ were too strong and have been cut back.
 
 ---
 
-**Session note.** Arxiv source in `~/.cache/knowledge/2506.01790/`.
-Repo fork at `/home/user/if-guide-toxic-kitty/`. This summary and the
-probe scaffolds live on branch `claude/inspiring-dijkstra-1d1th3` in
-the fork. Probes 4-6 are described but not yet scaffolded; they need
-either full retraining or large score-matrix artifacts out of scope
-for a standalone-runnable directory.
+**Where things are.** Paper source: arXiv 2506.01790 v3, LaTeX e-print.
+Claim graph: [`bearing/`](bearing/). Figures and their inputs:
+[`figures/`](figures/). Probe code: [`../probes/`](../probes/).

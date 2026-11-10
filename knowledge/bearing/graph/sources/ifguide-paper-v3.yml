@@ -1,0 +1,5 @@
+id: source/ifguide-paper-v3
+type: Source
+title: "IF-Guide paper, arXiv 2506.01790 v3"
+detail: "Coalson, Bae, Carlini, Hong. IF-Guide: Influence Function-Guided Detoxification of LLMs. arXiv:2506.01790v3, 5 Dec 2025. Read from the LaTeX source."
+verified: {date: "2026-11-04", via: "arXiv e-print source, unpacked and read in full"}

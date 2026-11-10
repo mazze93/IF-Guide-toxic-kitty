@@ -1,0 +1,28 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 278' width='900' height='278' role='img' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
+<title>Figure 3. Two proxies agree on about 45% of the tokens they select</title>
+<desc>Overlap coefficient for each pair of proxy models, from 0.401 to 0.517.</desc>
+<rect x='0.0' y='0.0' width='900.0' height='278.0' fill='#ffffff'/>
+<text x='20.0' y='28.0' font-size='15' fill='#111827' text-anchor='start' font-weight='600'>Figure 3. Two proxies agree on about 45% of the tokens they select</text>
+<text x='220.0' y='69.0' font-size='12' fill='#111827' text-anchor='end' font-weight='normal'>Pythia-410M / Pythia-1B</text>
+<rect x='230.0' y='56.0' width='320.5' height='18.0' fill='#1f5fa8'/>
+<text x='558.5' y='70.0' font-size='12' fill='#111827' text-anchor='start' font-weight='normal'>0.517  within Pythia</text>
+<text x='220.0' y='95.0' font-size='12' fill='#111827' text-anchor='end' font-weight='normal'>Pythia-160M / Pythia-410M</text>
+<rect x='230.0' y='82.0' width='288.9' height='18.0' fill='#1f5fa8'/>
+<text x='548.0' y='96.0' font-size='12' fill='#111827' text-anchor='start' font-weight='normal'>0.466  within Pythia</text>
+<text x='220.0' y='121.0' font-size='12' fill='#111827' text-anchor='end' font-weight='normal'>Pythia-160M / Pythia-1B</text>
+<rect x='230.0' y='108.0' width='281.5' height='18.0' fill='#1f5fa8'/>
+<text x='548.0' y='122.0' font-size='12' fill='#111827' text-anchor='start' font-weight='normal'>0.454  within Pythia</text>
+<text x='220.0' y='147.0' font-size='12' fill='#111827' text-anchor='end' font-weight='normal'>Pythia-1B / Llama-3.2-1B</text>
+<rect x='230.0' y='134.0' width='272.8' height='18.0' fill='#b4530f'/>
+<text x='548.0' y='148.0' font-size='12' fill='#111827' text-anchor='start' font-weight='normal'>0.440  cross family</text>
+<text x='220.0' y='173.0' font-size='12' fill='#111827' text-anchor='end' font-weight='normal'>Pythia-160M / Llama-3.2-1B</text>
+<rect x='230.0' y='160.0' width='259.8' height='18.0' fill='#b4530f'/>
+<text x='548.0' y='174.0' font-size='12' fill='#111827' text-anchor='start' font-weight='normal'>0.419  cross family</text>
+<text x='220.0' y='199.0' font-size='12' fill='#111827' text-anchor='end' font-weight='normal'>Pythia-410M / Llama-3.2-1B</text>
+<rect x='230.0' y='186.0' width='248.6' height='18.0' fill='#b4530f'/>
+<text x='548.0' y='200.0' font-size='12' fill='#111827' text-anchor='start' font-weight='normal'>0.401  cross family</text>
+<line x1='540.0' y1='48.0' x2='540.0' y2='212.0' stroke='#6b7280' stroke-dasharray='3 3'/>
+<text x='540.0' y='226.0' font-size='11' fill='#6b7280' text-anchor='middle' font-weight='normal'>half</text>
+<text x='20.0' y='248.0' font-size='12' fill='#111827' text-anchor='start' font-weight='normal'>Mean of the six pairs: 0.4495. The paper&#x27;s text says 0.4461.</text>
+<text x='20.0' y='266.0' font-size='11' fill='#6b7280' text-anchor='start' font-weight='normal'>Source: Paper v3, Appendix F, Table 9 (tables/token_overlap.tex)</text>
+</svg>

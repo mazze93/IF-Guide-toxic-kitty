@@ -1,0 +1,6 @@
+id: fragment/t1-t2-ifguide
+type: Fragment
+title: "Tables 1 and 2, Pythia-1B: IF-Guide 0.585 to 0.118 under Detoxify (4.96x), 0.548 to 0.245 under ToxiGen (2.24x)"
+source: source/ifguide-paper-v3
+context_tags: [paper-table]
+note: Full-prompt EMT, tables/main_results.tex and tables/implicit_toxicity_results.tex.

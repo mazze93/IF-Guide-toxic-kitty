@@ -1,0 +1,7 @@
+id: check/recompute-table-9-means
+type: Check
+title: Recompute the means from Table 9's six off-diagonal values
+context_tags: [paper-table]
+body: >
+  Mean of all six; mean of the three within-Pythia pairs. Held if they differ
+  from the 44.61% and 47.22% the paper's text reports.

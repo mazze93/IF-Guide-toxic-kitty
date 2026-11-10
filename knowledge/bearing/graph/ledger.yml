@@ -1,0 +1,43 @@
+# Append-only. Never edit an entry; correct with `retract`.
+# A frame is an independent source of evidence. A claim is "robust" only when
+# two or more counting frames support it. A check that has not been run
+# counts for nothing.
+frames:
+  paper-reported: [paper-table, paper-text]
+  repo-computed:  [shipped-data]
+  probe-run:      [probe]
+  own-reading:
+    tags: [own-reading]
+    counts: false
+    note: "The reviewer's own argument. Recorded, never counted."
+
+epochs:
+  - {from: 1, name: "first read"}
+  - {from: 9, name: "the overreach"}
+  - {from: 11, name: "after three reviews"}
+
+entries:
+  - {seq: 1, date: "2026-11-05", type: assert-claim, claim: claim/headline-inflated-by-shared-classifier, frame: paper-reported}
+  - {seq: 2, date: "2026-11-05", type: add-evidence, to: claim/headline-inflated-by-shared-classifier, rel: derives-from, from: fragment/t1-t2-ifguide, frame: paper-reported}
+  - {seq: 3, date: "2026-11-05", type: assert-claim, claim: claim/query-and-test-share-records, frame: repo-computed}
+  - {seq: 4, date: "2026-11-05", type: add-evidence, to: claim/query-and-test-share-records, rel: derives-from, from: fragment/rtp-index-intersection, frame: repo-computed}
+  - {seq: 5, date: "2026-11-05", type: assert-claim, claim: claim/proxies-select-mostly-different-tokens, frame: paper-reported}
+  - {seq: 6, date: "2026-11-05", type: add-evidence, to: claim/proxies-select-mostly-different-tokens, rel: derives-from, from: fragment/table-9-overlap, frame: paper-reported}
+  - {seq: 7, date: "2026-11-05", type: assert-claim, claim: claim/suppression-is-gated-not-deleted, frame: paper-reported}
+  - {seq: 8, date: "2026-11-05", type: add-evidence, to: claim/suppression-is-gated-not-deleted, rel: derives-from, from: fragment/steering-asymmetry, frame: paper-reported}
+  - {seq: 9, date: "2026-11-05", type: add-evidence, to: claim/suppression-is-gated-not-deleted, rel: derives-from, from: fragment/direction-exists-argument, frame: own-reading}
+  - {seq: 10, date: "2026-11-06", type: add-evidence, to: claim/suppression-is-gated-not-deleted, rel: tested-by, from: check/probe-2-lora-retoxification, frame: probe-run}
+  - {seq: 11, date: "2026-11-09", type: add-evidence, to: claim/suppression-is-gated-not-deleted, rel: tested-by, from: check/probe-3-steering-with-coherence, frame: probe-run}
+  - {seq: 12, date: "2026-11-10", type: retract, target: 8, reason: "The steering result reports EMT and TP only. Broken, repetitive text also scores as toxic, so EMT 1.0 does not show coherent toxic output came back."}
+  - {seq: 13, date: "2026-11-10", type: retract, target: 9, reason: "Does not follow. A difference-in-means direction exists for any model that tells toxic prompts from non-toxic ones. Reading is not writing."}
+  - {seq: 14, date: "2026-11-10", type: add-evidence, to: claim/headline-inflated-by-shared-classifier, rel: contradicts, from: fragment/t1-t2-rad, frame: paper-reported}
+  - {seq: 15, date: "2026-11-10", type: add-evidence, to: claim/headline-inflated-by-shared-classifier, rel: tested-by, from: check/probe-1-classifier-triangulation, frame: probe-run}
+  - {seq: 16, date: "2026-11-10", type: assert-claim, claim: claim/table-9-means-not-reproduced, frame: paper-reported}
+  - {seq: 17, date: "2026-11-10", type: add-evidence, to: claim/table-9-means-not-reproduced, rel: derives-from, from: fragment/table-9-overlap, frame: paper-reported}
+  - {seq: 18, date: "2026-11-10", type: add-evidence, to: claim/table-9-means-not-reproduced, rel: tested-by, from: check/recompute-table-9-means, frame: paper-reported}
+  - {seq: 19, date: "2026-11-10", type: run-check, claim: claim/table-9-means-not-reproduced, check: check/recompute-table-9-means, result: held, note: "Six off-diagonals average 0.4495; the three within-Pythia pairs 0.4790; cross-family 0.4200. Text says 44.61%, 47.22%, 42%."}
+  - {seq: 20, date: "2026-11-10", type: add-evidence, to: claim/query-and-test-share-records, rel: tested-by, from: check/recompute-from-shipped-data, frame: repo-computed}
+  - {seq: 21, date: "2026-11-10", type: run-check, claim: claim/query-and-test-share-records, check: check/recompute-from-shipped-data, result: held, note: "Printed 84112 query, 10000 test, 4648 shared."}
+  - {seq: 22, date: "2026-11-10", type: add-evidence, to: claim/query-and-test-share-records, rel: contradicts, from: fragment/paper-says-disjoint, frame: paper-reported}
+  - {seq: 23, date: "2026-11-10", type: add-evidence, to: claim/proxies-select-mostly-different-tokens, rel: tested-by, from: check/probe-6-proxy-intersection, frame: probe-run}
+  - {seq: 24, date: "2026-11-10", type: add-evidence, to: claim/proxies-select-mostly-different-tokens, rel: derives-from, from: fragment/proxy-results-similar, frame: paper-reported}
