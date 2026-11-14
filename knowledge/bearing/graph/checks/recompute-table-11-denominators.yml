@@ -1,0 +1,6 @@
+id: check/recompute-table-11-denominators
+type: Check
+title: List every count out of 100 or fewer that rounds to each Table 11 cell
+context_tags: [paper-table]
+body: >
+  Run knowledge/checks/recompute_paper_numbers.py. Held if no k/100 gives 87.5% or 76.7%.

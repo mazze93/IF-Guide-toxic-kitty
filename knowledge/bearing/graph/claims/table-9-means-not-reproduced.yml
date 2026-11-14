@@ -7,3 +7,4 @@ context_tags: [paper-table]
 summary_section: "5.B"
 body: >
   The table gives 44.95% overall and 47.90% within Pythia; the text says 44.61% and 47.22%.
+  Rounding allows at most 0.05pp. The text's scale-split figures (47.27%, 43.61%) fit no grouping of the six pairs.

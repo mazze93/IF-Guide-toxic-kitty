@@ -82,7 +82,7 @@ def fig_claims(fold, claims):
         ]
         y += 64
     return svg(960, y + 22, "Figure 0. What each claim stands on",
-               "Five claims from the summary with the standing derived by the bearing engine. "
+               f"{len(rows)} claims from the summary with the standing derived by the bearing engine. "
                + " ".join(f"{claims[c]['title']}: {b['tier']}." for c, b in rows),
                body, "knowledge/bearing ledger, folded by the bearing engine; fold.json")
 

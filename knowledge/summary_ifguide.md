@@ -4,13 +4,16 @@
 **Authors:** Zachary Coalson (Oregon State), Juhan Bae (Toronto), Nicholas Carlini (Anthropic), Sanghyun Hong (Oregon State)
 **Venue:** NeurIPS 2025
 **Tag:** `ifguide`
-**Reviewed:** 2026-11-04 (first read) · 2026-11-09 (citations repinned to v3) · 2026-11-10 (claims cut back to what the data supports) · adversarial read, walking backwards from claims to assumptions
+**Reviewed:** 2026-11-04 (first read) · 2026-11-09 (citations repinned to v3) · 2026-11-10 (claims cut back to what the data supports) · 2026-11-14 (§5.B, §5.C, §5.F rechecked against v3) · adversarial read, walking backwards from claims to assumptions
 
 > **Version pin.** Every table and appendix reference below is keyed to
 > v3. Earlier drafts of this summary cited Appendix E/Table 10 for the
 > proxy overlap and Appendix F/Table 13 for the recognition result;
 > both were off (should be Appendix F/Table 9 and Appendix H/Table 11
 > respectively). A reviewer caught it; fixed in this revision.
+> Checked again on 2026-11-14: v3 is still the newest version on arXiv
+> (v1 2 Jun 2025, v2 9 Jun 2025, v3 5 Dec 2025), and every appendix,
+> table and section number below was re-read against it.
 
 > **Status, 2026-11-10.** No probe in this document has been run, and
 > the models the probes need are not public (§7). Three rounds of
@@ -21,6 +24,14 @@
 > marked where it was made. Treat §5 as a list of questions the
 > published numbers leave open.
 >
+> **Fourth pass, 2026-11-14.** Rechecking §5.B, §5.C and §5.F against v3
+> found three things the earlier passes missed. The paper's scale-split
+> overlap averages cannot come from Table 9 either (§5.B). Table 11's
+> toxic-class percentages are not whole counts out of 100, so some
+> answers were dropped from the denominator (§5.F). And the paper's own
+> Appendix D.4 reports EMT above 0.8 alongside repeated tokens (§5.C).
+> The arithmetic is in `checks/recompute_paper_numbers.py`.
+>
 > **What this is.** An adversarial read: it looks for the assumptions a
 > result rests on and designs checks that could change a reader's
 > confidence. It is not a review of the paper's quality.
@@ -29,7 +40,7 @@
 
 ## 0. How claims in this document are qualified
 
-![Figure 0. Five claims from this summary and the standing the bearing engine derived for each: four rest on one source and are marked fragile; the lacuna thesis has no counted source because both of its probes are unrun.](figures/fig-0-claim-standing.svg)
+![Figure 0. Six claims from this summary and the standing the bearing engine derived for each: five rest on one source and are marked fragile; the lacuna thesis has no counted source because both of its probes are unrun.](figures/fig-0-claim-standing.svg)
 
 Each claim is a node in a small graph under [`bearing/`](bearing/), and
 its standing is computed by the bearing engine
@@ -42,7 +53,7 @@ its standing is computed by the bearing engine
   counted.
 - **Robust** means two or more sources. **Fragile** means one.
   **Gone** means none that count.
-- A check that has not been run counts for nothing. Four of the six
+- A check that has not been run counts for nothing. Four of the eight
   checks are unrun.
 - Evidence against a claim is shown beside it and never subtracted.
 - A withdrawn argument stays in the ledger with the reason.
@@ -164,10 +175,14 @@ sign on toxic tokens gives `+log P`). Confirmed match.
 | Toxic-direction steering (IF-Guide)                | Pythia-1B                                | +scaling: no change; −scaling: EMT→1.0 |
 | Toxicity *recognition* (instruction-tuned)         | Pythia-2.8B                              | 87.5% → 76.7% on toxic; 27% → 34% on non-toxic |
 
-These numbers are not in dispute — they are reproducible against the
-released code, data indices, and model checkpoints (see fork at
-[github.com/mazze93/if-guide-toxic-kitty](https://github.com/mazze93/if-guide-toxic-kitty)).
-What is in dispute is what they mean.
+These are the numbers as the paper reports them. None is re-measured
+here: the code and the RTP index files are public (fork at
+[github.com/mazze93/if-guide-toxic-kitty](https://github.com/mazze93/if-guide-toxic-kitty)),
+but no IF-Guide checkpoints are (§10), so no row can be rerun without
+training the models first. Two of the paper's own figures fail their
+internal checks: the proxy-overlap averages (§5.B) and the recognition
+percentages (§5.F). The rest of the dispute is about what the numbers
+mean.
 
 ---
 
@@ -244,20 +259,44 @@ Llama-3.2-1B                                              1.000
 
 ![Figure 3. Overlap coefficient for each of the six proxy pairs, 0.401 to 0.517. Only one pair exceeds one half.](figures/fig-3-proxy-overlap.svg)
 
-The paper's Appendix F text reports mean overall overlap 44.61%, mean
-within-Pythia 47.22%, mean cross-family 42%. Recomputing from the six
-off-diagonal values in Table 9 produces **44.95%** overall and
-**47.90%** within-Pythia; cross-family 42.00% reproduces cleanly. The
-within-family / cross-family story the paper tells is right in direction;
-the specific averages aren't the ones the table yields, so either the
-paper rounded differently or its averaging set differs from the six
-off-diagonals I see. Flagging because inheriting the paper's numbers
-unchecked is exactly what an adversarial read should catch.
+The paper's Appendix F text reports mean overlap of 44.61% across all
+pairs, 47.22% within Pythia and 42% across families. The six
+off-diagonal values in Table 9 give:
+
+```
+all six pairs   (0.466 + 0.454 + 0.419 + 0.517 + 0.401 + 0.440) / 6 = 0.4495   text: 44.61%
+within Pythia   (0.466 + 0.454 + 0.517) / 3                         = 0.4790   text: 47.22%
+cross family    (0.419 + 0.401 + 0.440) / 3                         = 0.4200   text: 42%
+```
+
+Rounding cannot close the gaps. Each table entry is printed to three
+decimals, so it is off by at most 0.0005, and so is any average of
+them: 0.05pp at most. The gaps are 0.34pp and 0.68pp.
+
+The same paragraph gives a second split: pairs "within ∼500M
+parameters" share 47.27%, pairs "differing by >500M" share 43.61%. The
+paper does not say which pairs fall in which group, so I tried every
+grouping of the six. No subset averages to 47.27% within rounding,
+so no division of the six pairs produces both figures. (Three subsets
+do average to 43.61%, but none of them leaves the remaining pairs at
+47.27%.)
+
+So the text and the table disagree, and the paper alone cannot say
+which is right. Both first appear in v3: v1 and v2 have no overlap
+appendix, so this is not text left over from an earlier table. The text may come from another run, from unrounded
+values over a different set of pairs, or from a transcription slip. The
+family split keeps its direction under the table's own values (47.90%
+against 42.00%); the scale split cannot be checked at all. Below I use
+the table's values. Inheriting the paper's averages unchecked is
+exactly what an adversarial read should catch.
+`checks/recompute_paper_numbers.py` reproduces every number in this
+subsection.
 
 On a 20M-token budget, ~45% pairwise overlap means each *pair* of
-proxies agrees on ~9M tokens and disagrees on ~11M. The paper frames
-this as "44.61% is substantial relative to a 1B-token corpus." That's
-the wrong denominator. The right denominator is the *selected* set
+proxies agrees on ~9M tokens and disagrees on ~11M. The paper calls
+this substantial: "While this may seem modest at first glance, it is
+substantial when considering that the size of the training corpus is
+1B tokens." That's the wrong denominator. The right denominator is the *selected* set
 (20M), not the *source* set (1B). On the selected set, **the majority
 of each proxy's output disagrees with any given other proxy's output**,
 and yet all of them produce similar downstream toxicity reductions.
@@ -273,7 +312,7 @@ Three compatible interpretations, each probative:
    this makes IF-Guide behaviourally robust but semantically shallow —
    the attribution is not a measurement of "which tokens are toxic" but
    a measurement of "which tokens, when penalized, reduce measured toxicity."
-2. **The 8.9M agreed-upon tokens carry the signal; the 11.1M idiosyncratic
+2. **The ~9M agreed-upon tokens carry the signal; the ~11M idiosyncratic
    tokens are noise.** If true, the paper is leaving effect on the table
    — the right method is proxy ensembling: use the intersection across
    multiple small proxies, which would be much cheaper than any single
@@ -326,6 +365,30 @@ The paper reports EMT and TP only. It gives no perplexity, no
 repetition rate and no sample of the steered text, so **the published
 numbers do not separate these two readings.** What would: the same
 sweep with a coherence measure beside EMT. That is Probe 3.
+
+**The paper's own pipeline has produced the second pattern before.**
+Appendix D.4 sweeps the penalty strength λ. Above λ = 1, "training
+destabilizes: EMT and TP exceed 0.80, and we observe that models tend
+to repeat tokens indefinitely." That is a training failure, not a
+steering push, so it does not show the §4.6 result is degenerate. It
+does show that in this paper's setup an EMT above 0.8 has already
+appeared together with text that is not coherent, which is the case EMT
+cannot flag. Two more details argue for checking before reading the
+steering result as a circuit. EMT is a mean over 1,000 prompts of each
+prompt's worst completion, so a value at 1.0 says nearly every prompt
+produced a completion Detoxify scored near 1.0: a ceiling, not a graded
+response. And the released code (`src/`) contains no steering or
+direction code, so a rerun has to be written from the paper's
+description.
+
+**What would settle it, and what it costs.** Rerun the §4.6 sweep on
+the base and IF-Guide Pythia-1B models and record, beside EMT, each
+steered completion's perplexity under the unsteered model, its
+repeated-4-gram rate and a sample of the text. That needs both models'
+weights, because steering adds a vector to internal activations. A
+hosted model API that returns only text cannot run it. No IF-Guide
+checkpoint is public (§10), so the models must come from the authors or
+be reproduced first. Until that run exists, this caveat stays open.
 
 **An argument I made here earlier, and withdraw.** A previous revision
 said the direction's existence was itself evidence of retention: "if
@@ -409,7 +472,7 @@ cause. It can only identify learned-circuit changes in the body of the network.
 ### F. Toxicity recognition shift — label-bias, not a one-sided deficit
 
 Appendix H, Table 11 (Pythia-2.8B, instruction-tuned on UltraChat,
-tested on 100 toxic + 100 non-toxic RTP examples):
+prompted with 100 toxic + 100 non-toxic RTP examples):
 
 |           | Toxic acc. | Non-toxic acc. | Balanced acc. |
 | --------- | ---------- | -------------- | ------------- |
@@ -417,14 +480,44 @@ tested on 100 toxic + 100 non-toxic RTP examples):
 | IF-Guide  | 76.7%      | 34.0%          | ~55.4%        |
 | **Δ**     | **−10.8pp**| **+7.0pp**     | **−1.9pp**    |
 
-An earlier revision of this summary reported only the toxic-side drop
-and framed it as "12% relative capability regression." That framing
-was one-sided. With n=100 per class, each cell's 95% CI is roughly
-±8–9pp (binomial). The honest reading of Table 11 is a **label-bias
-shift of uncertain magnitude**: IF-Guide is less likely to label *any*
-sentence toxic (toxic-class accuracy down, non-toxic-class accuracy
-up), balanced accuracy barely moved, and the per-cell shifts are near
-the CI edge.
+Both changes belong in any use of this table: toxic-class accuracy
+fell 10.8pp and non-toxic-class accuracy rose 7.0pp. An earlier
+revision of this summary reported only the drop and framed it as "12%
+relative capability regression." That framing was one-sided.
+
+**The toxic-class cells are not whole counts out of 100.** 27.0% and
+34.0% are 27/100 and 34/100. No count out of 100 gives 87.5% or 76.7%.
+The fractions that do, with at least 60 in the denominator, are 56/64,
+63/72, 70/80, 77/88 or 84/96 for 87.5%, and 46/60, 56/73, 66/86 or
+69/90 for 76.7%. So some toxic-example answers were left out of the
+denominator, most likely replies that were neither "Toxic" nor
+"Non-toxic". The paper does not say how many, or whether the two models
+lost the same number. Part of the −10.8pp could therefore be a change
+in how often each model answered in the expected format, not in what
+it answered.
+
+**Whether either change is real cannot be read off the table.**
+Appendix H says it prompted "both models with 200 examples", which
+reads as the same 200 for each, so the right test is a paired one. It turns on how many prompts flipped
+from right to wrong and back, which the paper does not report. Two
+cases bracket the answer. If the two models' answers were unrelated
+(the independent-samples case), neither change clears zero. The
+−10.8pp toxic change has a 95% half-width of 11.0pp at the largest
+denominators its cells allow and 13.4pp at the smallest. The +7.0pp
+non-toxic change has 12.7pp. If instead every flip went one way, with 7
+non-toxic prompts moving from wrong to right and none moving back, an
+exact McNemar test gives p = 0.016 and the +7.0pp is real. Two flips
+back already raise it to p = 0.065. (The toxic cells fit no shared
+denominator at all, so the two models dropped different numbers of
+answers there, and a paired test could only cover the prompts both
+answered.)
+
+The honest reading of Table 11 is a **label-bias shift of uncertain
+size**: IF-Guide labelled fewer sentences toxic in both classes, and
+balanced accuracy moved 1.9pp. The paper reads the same table as
+showing IF-Guide "does not appear to impair the ability to reason
+about toxicity". Without per-prompt agreement, the table can neither
+support that reading nor show the opposite.
 
 Probe 5's hypothesis stands — there may be a measurable
 "alignment tax" on reasoning about norm-violating content — but
@@ -770,7 +863,7 @@ operating point of the same substrate.
 
 **Hypothesis.** On tasks that require reasoning about harmful text,
 the IF-Guide model scores measurably below its base. Appendix H cannot
-settle this: at n = 100 per class its result reads as a shift in which
+settle this: at 100 prompts per class its result reads as a shift in which
 label the model prefers, not clearly as lost ability (§5.F).
 
 **Protocol.**
@@ -803,7 +896,8 @@ you kept.
 
 ### Probe 6 · Proxy-disagreement forensics (dependent on score artifacts)
 
-**Hypothesis.** The 44.6% proxy overlap decomposes into:
+**Hypothesis.** The ~45% proxy overlap (44.95% from Table 9; the
+paper's text says 44.61%, §5.B) decomposes into:
 - A "universally agreed" core of literal profanity / slurs / lexicon
   that any small model catches.
 - A long tail of proxy-specific attribution where each model is seeing
@@ -860,7 +954,7 @@ Once they do:
    already produces, so it is the cheapest, and its result tells you
    how far to trust every Detoxify number in the other probes.
 2. **Probe 5** second. Inference only, and it answers a practical
-   question the paper leaves at n = 100 per class: what does the
+   question the paper leaves open at 100 prompts per class: what does the
    detoxified model lose on tasks that need it to reason about harmful
    text?
 3. **Probe 2** third. It is the direct test of §5.H and the first one

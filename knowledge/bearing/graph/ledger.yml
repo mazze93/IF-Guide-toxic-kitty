@@ -41,3 +41,9 @@ entries:
   - {seq: 22, date: "2026-11-10", type: add-evidence, to: claim/query-and-test-share-records, rel: contradicts, from: fragment/paper-says-disjoint, frame: paper-reported}
   - {seq: 23, date: "2026-11-10", type: add-evidence, to: claim/proxies-select-mostly-different-tokens, rel: tested-by, from: check/probe-6-proxy-intersection, frame: probe-run}
   - {seq: 24, date: "2026-11-10", type: add-evidence, to: claim/proxies-select-mostly-different-tokens, rel: derives-from, from: fragment/proxy-results-similar, frame: paper-reported}
+  - {seq: 25, date: "2026-11-14", type: add-evidence, to: claim/table-9-means-not-reproduced, rel: tested-by, from: check/recompute-overlap-text-figures, frame: paper-reported}
+  - {seq: 26, date: "2026-11-14", type: run-check, claim: claim/table-9-means-not-reproduced, check: check/recompute-overlap-text-figures, result: held, note: "Gaps 0.34pp and 0.68pp against a 0.05pp rounding bound. No subset of the six pairs averages to 47.27%, so no split gives both 47.27% and 43.61%."}
+  - {seq: 27, date: "2026-11-14", type: assert-claim, claim: claim/table-11-toxic-cells-not-whole-counts, frame: paper-reported}
+  - {seq: 28, date: "2026-11-14", type: add-evidence, to: claim/table-11-toxic-cells-not-whole-counts, rel: derives-from, from: fragment/table-11-recognition, frame: paper-reported}
+  - {seq: 29, date: "2026-11-14", type: add-evidence, to: claim/table-11-toxic-cells-not-whole-counts, rel: tested-by, from: check/recompute-table-11-denominators, frame: paper-reported}
+  - {seq: 30, date: "2026-11-14", type: run-check, claim: claim/table-11-toxic-cells-not-whole-counts, check: check/recompute-table-11-denominators, result: held, note: "87.5% fits 56/64 to 84/96; 76.7% fits 46/60 to 69/90; neither fits k/100. 27.0% and 34.0% are 27/100 and 34/100."}
