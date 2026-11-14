@@ -1,0 +1,9 @@
+id: claim/headline-inflated-by-shared-classifier
+type: Claim
+title: "The headline reduction is inflated because Detoxify both labels the training signal and scores the result"
+state: candidate
+confidence: inferred
+context_tags: [paper-table]
+summary_section: "5.A"
+body: >
+  IF-Guide's reduction falls from 4.96x to 2.24x when ToxiGen scores it. Whether that is the shared classifier or the different construct is open.

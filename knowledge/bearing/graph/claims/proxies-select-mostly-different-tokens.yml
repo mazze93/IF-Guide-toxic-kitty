@@ -1,0 +1,9 @@
+id: claim/proxies-select-mostly-different-tokens
+type: Claim
+title: "Any two proxies agree on under 52% of their selected tokens, yet give similar reductions"
+state: candidate
+confidence: inferred
+context_tags: [paper-table]
+summary_section: "5.B"
+body: >
+  So the method finds a sufficient set of tokens, not the set. What the shared tokens contribute is untested.

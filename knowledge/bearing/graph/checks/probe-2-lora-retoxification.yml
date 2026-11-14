@@ -1,0 +1,7 @@
+id: check/probe-2-lora-retoxification
+type: Check
+title: "Probe 2: does a small fine-tune restore the suppressed toxicity"
+context_tags: [probe]
+body: >
+  Rule in probes/lib/verdicts.py (lora_retoxification). Not run; the fine-tune
+  is not implemented.

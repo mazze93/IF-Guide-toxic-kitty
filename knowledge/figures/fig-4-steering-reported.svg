@@ -1,0 +1,18 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 960 240' width='960' height='240' role='img' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
+<title>Figure 4. Steering: the numbers the paper gives, and the measure it does not</title>
+<desc>Reported EMT endpoints for feature steering on the base and IF-Guide Pythia-1B models. No coherence measure is reported.</desc>
+<rect x='0.0' y='0.0' width='960.0' height='240.0' fill='#ffffff'/>
+<text x='20.0' y='28.0' font-size='15' fill='#111827' text-anchor='start' font-weight='600'>Figure 4. Steering: the numbers the paper gives, and the measure it does not</text>
+<text x='240.0' y='72.0' font-size='13' fill='#111827' text-anchor='end' font-weight='600'>Base model</text>
+<rect x='250.0' y='58.0' width='225.6' height='16.0' fill='#6b7280'/>
+<text x='481.6' y='71.0' font-size='12' fill='#111827' text-anchor='start' font-weight='normal'>0.47 at scaling -5</text>
+<rect x='250.0' y='78.0' width='331.2' height='16.0' fill='#1f5fa8'/>
+<text x='587.2' y='91.0' font-size='12' fill='#111827' text-anchor='start' font-weight='normal'>0.69 at scaling +5</text>
+<text x='240.0' y='132.0' font-size='13' fill='#111827' text-anchor='end' font-weight='600'>IF-Guide model</text>
+<rect x='250.0' y='118.0' width='480.0' height='16.0' fill='#b4530f'/>
+<text x='736.0' y='131.0' font-size='12' fill='#111827' text-anchor='start' font-weight='normal'>1.0 under negative scaling</text>
+<text x='250.0' y='151.0' font-size='12' fill='#6b7280' text-anchor='start' font-weight='normal'>positive scaling: no effect (no number given)</text>
+<text x='20.0' y='186.0' font-size='12' fill='#111827' text-anchor='start' font-weight='600'>Reported: EMT and TP.   Not reported: perplexity, repetition rate, any sample of the steered text.</text>
+<text x='20.0' y='206.0' font-size='12' fill='#111827' text-anchor='start' font-weight='normal'>So 1.0 may be coherent toxic text coming back, or broken text that scores as toxic. Probe 3 measures the difference.</text>
+<text x='20.0' y='228.0' font-size='11' fill='#6b7280' text-anchor='start' font-weight='normal'>Source: Paper v3, section 4.6 text (sections/results.tex lines 155-156). The figure&#x27;s intermediate points are not given as numbers.</text>
+</svg>

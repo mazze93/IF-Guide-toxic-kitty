@@ -1,0 +1,10 @@
+id: claim/table-9-means-not-reproduced
+type: Claim
+title: "The overlap means in the paper's text are not the means of its Table 9"
+state: candidate
+confidence: inferred
+context_tags: [paper-table]
+summary_section: "5.B"
+body: >
+  The table gives 44.95% overall and 47.90% within Pythia; the text says 44.61% and 47.22%.
+  Rounding allows at most 0.05pp. The text's scale-split figures (47.27%, 43.61%) fit no grouping of the six pairs.

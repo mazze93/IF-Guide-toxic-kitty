@@ -1,0 +1,10 @@
+id: claim/table-11-toxic-cells-not-whole-counts
+type: Claim
+title: "Table 11's toxic-class accuracies are not counts out of the 100 toxic prompts"
+state: candidate
+confidence: inferred
+context_tags: [paper-table]
+summary_section: "5.F"
+body: >
+  No k/100 gives 87.5% or 76.7%, so some toxic-example answers were left out of the
+  denominator. The paper does not say how many.

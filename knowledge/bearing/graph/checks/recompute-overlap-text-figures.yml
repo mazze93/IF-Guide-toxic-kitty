@@ -1,0 +1,7 @@
+id: check/recompute-overlap-text-figures
+type: Check
+title: Test whether rounding or any grouping of Table 9's pairs gives the text's overlap figures
+context_tags: [paper-table]
+body: >
+  Run knowledge/checks/recompute_paper_numbers.py. Held if the gaps exceed the 0.05pp that
+  three-decimal rounding allows and no division of the six pairs gives both 47.27% and 43.61%.

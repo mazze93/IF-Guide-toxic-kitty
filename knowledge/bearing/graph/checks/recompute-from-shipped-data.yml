@@ -1,0 +1,6 @@
+id: check/recompute-from-shipped-data
+type: Check
+title: Recompute the query/test intersection from the shipped index files
+context_tags: [shipped-data]
+body: >
+  Run the one command in summary section 5.D. Held if it prints 4,648.

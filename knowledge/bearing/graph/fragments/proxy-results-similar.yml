@@ -1,0 +1,6 @@
+id: fragment/proxy-results-similar
+type: Fragment
+title: "Section 4.5: proxy-selected tokens give similar toxicity reductions"
+source: source/ifguide-paper-v3
+context_tags: [paper-text]
+note: The paper's own claim. Recorded as stated, not re-measured.

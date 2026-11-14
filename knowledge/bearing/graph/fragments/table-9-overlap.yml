@@ -1,0 +1,6 @@
+id: fragment/table-9-overlap
+type: Fragment
+title: "Appendix F, Table 9: pairwise overlap of selected tokens is 0.401 to 0.517; text reports means 44.61% and 47.22%"
+source: source/ifguide-paper-v3
+context_tags: [paper-table]
+note: Six off-diagonal values 0.466, 0.454, 0.419, 0.517, 0.401, 0.440.

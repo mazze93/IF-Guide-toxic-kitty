@@ -1,0 +1,6 @@
+id: fragment/paper-says-disjoint
+type: Fragment
+title: "Paper text: evaluation examples are 'distinct from those in the influence computation' (3.1); query set 'disjoint from evaluation' (4.2)"
+source: source/ifguide-paper-v3
+context_tags: [paper-text]
+note: True per label. Not true per record.

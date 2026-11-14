@@ -1,0 +1,7 @@
+id: ifguide-adversarial-read
+title: "IF-Guide: what the adversarial read can stand on"
+version: 0.1.0
+status: seed
+bearing:
+  graph: graph
+  manuscript: manuscript

@@ -1,0 +1,9 @@
+id: claim/query-and-test-share-records
+type: Claim
+title: "The query pool and the test pool share 4,648 RTP records"
+state: candidate
+confidence: inferred
+context_tags: [shipped-data]
+summary_section: "5.D"
+body: >
+  46.5% of the 10,000 test prompts also appear in the query pool, under a different label because the thresholds differ.

@@ -1,0 +1,5 @@
+id: source/ifguide-repo
+type: Source
+title: "IF-Guide repository, shipped data"
+detail: "data/RTP/query_indices and data/RTP/test_indices in this fork, unchanged from upstream."
+verified: {date: "2026-11-10", via: "git clone of this fork; data/RTP unchanged from upstream main"}

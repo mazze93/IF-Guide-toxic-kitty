@@ -1,0 +1,6 @@
+id: fragment/table-11-recognition
+type: Fragment
+title: "Appendix H, Table 11: toxic 87.5% to 76.7%, non-toxic 27.0% to 34.0%, on 100 toxic and 100 non-toxic prompts"
+source: source/ifguide-paper-v3
+context_tags: [paper-table]
+note: Base and IF-Guide Pythia-2.8B, instruction-tuned on UltraChat-200k. The text says 100 examples per class.

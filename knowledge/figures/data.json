@@ -1,0 +1,35 @@
+{
+  "_note": "Every number is copied from the place named in `source`. Nothing here was measured by a probe.",
+  "reduction_by_classifier": {
+    "source": "Paper v3, Tables 1 and 2, Pythia-1B, full-prompt EMT (tables/main_results.tex, tables/implicit_toxicity_results.tex)",
+    "undefended": {"detoxify": 0.585, "toxigen": 0.548},
+    "methods": [
+      {"name": "IF-Guide", "detoxify": 0.118, "toxigen": 0.245},
+      {"name": "RAD", "detoxify": 0.162, "toxigen": 0.286},
+      {"name": "Toxicity Filtering", "detoxify": 0.375, "toxigen": 0.404},
+      {"name": "DPO", "detoxify": 0.437, "toxigen": 0.401},
+      {"name": "Word Filtering", "detoxify": 0.458, "toxigen": 0.450}
+    ]
+  },
+  "query_test_overlap": {
+    "source": "data/RTP index files in this repository; command in summary section 5.D",
+    "query": 84112, "test": 10000, "shared": 4648
+  },
+  "proxy_overlap": {
+    "source": "Paper v3, Appendix F, Table 9 (tables/token_overlap.tex)",
+    "pairs": [
+      {"pair": "Pythia-410M / Pythia-1B", "value": 0.517, "family": "within Pythia"},
+      {"pair": "Pythia-160M / Pythia-410M", "value": 0.466, "family": "within Pythia"},
+      {"pair": "Pythia-160M / Pythia-1B", "value": 0.454, "family": "within Pythia"},
+      {"pair": "Pythia-1B / Llama-3.2-1B", "value": 0.440, "family": "cross family"},
+      {"pair": "Pythia-160M / Llama-3.2-1B", "value": 0.419, "family": "cross family"},
+      {"pair": "Pythia-410M / Llama-3.2-1B", "value": 0.401, "family": "cross family"}
+    ],
+    "paper_text_mean": 0.4461
+  },
+  "steering": {
+    "source": "Paper v3, section 4.6 text (sections/results.tex lines 155-156). The figure's intermediate points are not given as numbers.",
+    "base": {"at_minus_5": 0.47, "at_plus_5": 0.69},
+    "ifguide": {"negative_scaling_reaches": 1.0, "positive_scaling": "no effect"}
+  }
+}

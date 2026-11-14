@@ -1,0 +1,13 @@
+# Probe outputs are ephemeral; keep the directory, not its contents.
+results/*
+!results/.gitkeep
+
+# Local venv
+.venv/
+__pycache__/
+*.pyc
+
+# The repository's root .gitignore ignores every `lib/` (it is the stock
+# Python template, written for virtualenv layouts). Without this line the
+# probes' shared module would be left out of every commit.
+!lib/
